@@ -1,0 +1,12 @@
+package RootIOTools
+
+use SniperKernel v*
+use DataModelRelease v* DataModel
+use RootIOSvc v* RootIO
+use RootIOUtil v* RootIO
+use EDMUtil v* DataModel
+
+library RootIOTools *.cc
+apply_pattern install_more_includes more=RootIOTools
+apply_pattern linker_library library=RootIOTools
+apply_pattern install_python_modules

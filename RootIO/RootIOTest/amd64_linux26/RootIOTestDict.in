@@ -1,0 +1,9 @@
+document rootcint RootIOTestDict ../Event/*.h library=RootIOTest
+make_fragment make_header /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-branch/ExternalLibs/CMT/v1r26/mgr/fragments/make_header
+make_fragment dependencies /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-branch/ExternalLibs/CMT/v1r26/mgr/fragments/dependencies
+make_fragment cleanup_header /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-branch/ExternalLibs/CMT/v1r26/mgr/fragments/cleanup_header
+make_fragment rootcint -header=rootcint_header -trailer=rootcint_trailer /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-Pre1/ExternalInterface/Externals/ROOT/cmt/fragments/rootcint
+make_fragment rootcint_header /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-Pre1/ExternalInterface/Externals/ROOT/cmt/fragments/rootcint_header
+make_fragment rootcint_trailer /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-Pre1/ExternalInterface/Externals/ROOT/cmt/fragments/rootcint_trailer
+make_fragment document_header /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-branch/ExternalLibs/CMT/v1r26/mgr/fragments/document_header
+make_fragment dependency /cvmfs/juno.ihep.ac.cn/centos7_amd64_gcc830/Pre-Release/J20v2r0-branch/ExternalLibs/CMT/v1r26/mgr/fragments/dependency
