@@ -6,10 +6,12 @@
 
 #include <string>
 
+class Task;
+
 class SimEventMerger : public IInputStream {
 
     public:
-        SimEventMerger(IInputStream* concreateInputStream, const std::string& path);
+        SimEventMerger(IInputStream* concreateInputStream, const std::string& path,Task * t);
         ~SimEventMerger();
 
         bool initialize();
@@ -27,7 +29,7 @@ class SimEventMerger : public IInputStream {
         long getEntries();
         // get current stream name.
         std::string streamname();
-
+       // void setTask(Task * t){ task = t;}
     private:
         bool readOneEvent();
 
@@ -37,6 +39,8 @@ class SimEventMerger : public IInputStream {
         JM::EvtNavigator* m_currentEvent;
         JM::EvtNavigator* m_cachedEvent;
         int  m_entry;
+        double total_time;
+        Task * task;
 };
 
 #endif

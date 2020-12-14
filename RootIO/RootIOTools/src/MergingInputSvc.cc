@@ -32,7 +32,8 @@ bool MergingInputSvc::initialize()
 
     if (m_mergingType == "SimEvent") {
         std::cout<<"this is before new SimEventMerge!!"<<std::endl;
-        m_merger = new SimEventMerger(m_inputSvc->getInputStream("EvtNavigator"), m_path);
+        m_merger = new SimEventMerger(m_inputSvc->getInputStream("EvtNavigator"), m_path,getParent());
+     //   m_merger->setTask(getParent());
         std::cout<<"this is after new SimEventMerger!!"<<std::endl;
     }
     else {

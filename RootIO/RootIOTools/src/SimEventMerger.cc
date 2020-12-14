@@ -1,16 +1,27 @@
 #include "SimEventMerger.h"
 #include "SniperKernel/SniperLog.h"
+#include "SniperKernel/AlgFactory.h"
 #include "Event/SimHeader.h"
 #include "Event/SimPMTHit.h"
+#include "SniperKernel/SniperPtr.h"
+
+
+#include "JunoTimer/IJunoTimerSvc.h"
+#include "JunoTimer/JunoTimer.h"
+static IJunoTimerSvc* m_timersvc;
+static JunoTimerPtr fill_array;
 
 
 
 
-SimEventMerger::SimEventMerger(IInputStream* concreateInputStream, const std::string& path)
+
+SimEventMerger::SimEventMerger(IInputStream* concreateInputStream, const std::string& path,Task *t)
     : m_concreateInputStream(concreateInputStream),
       m_path(path),
       m_entry(-1)
 {
+   total_time=0;
+   task=t;
 }
 
 SimEventMerger::~SimEventMerger()
@@ -38,19 +49,29 @@ bool SimEventMerger::next(int step, bool read UNUSED)
         LogError << "invalid step " << step << std::endl;
         return false;
     }
-
+    fill_array->start();
+    
     // Read and burn. Costy!
     while (step != 1 ) {
+        std::cout<<"this is while loop"<<std::endl;
         step = step - 1;
         m_entry = m_entry + 1;
         bool okay = this->readOneEvent();
-        if (!okay) return false;
+        if (!okay) {
+        fill_array->stop();
+        total_time+=fill_array->elapsed();     
+  
+         return false;}
         delete m_currentEvent;
         m_currentEvent = 0;
     }
 
     m_entry = m_entry + 1;
     bool okay = this->readOneEvent();
+    fill_array->stop();  
+    total_time+=fill_array->elapsed();
+    std::cout<<"total_time="<<total_time<<std::endl;
+    std::cout<<"this is out while loop"<<std::endl;
     return okay;
 }
 
@@ -63,11 +84,26 @@ bool SimEventMerger::previous(int step UNUSED, bool read UNUSED)
 bool SimEventMerger::first(bool read)
 {
     std::cout<<"this is SimEventMerger::first"<<std::endl;
+    SniperPtr<IJunoTimerSvc> _timersvc(*task, "JunoTimerSvc");
+    std::cout<<"this is the note!!!!!!!!"<<std::endl;
+
+    if (_timersvc.invalid()) {
+        LogError << "Can't Locate JunoTimerSvc. If you want to use it, please "
+                 << "enalbe it in your job option file."
+                 << std::endl;
+    }
+    m_timersvc = _timersvc.data();
+    fill_array = m_timersvc->get("fill_array");
+    fill_array->start();
+    std::cout<<"this is the note!!!!!!!!"<<std::endl;
+
     if (m_cachedEvent) {
         delete m_cachedEvent;
         m_cachedEvent = 0;
     }
+    std::cout<<"this is the note!!!!!!!!"<<std::endl;
     bool okay = m_concreateInputStream->first(read);
+    std::cout<<"this is the note!!!!!!!!"<<std::endl;
     if (!okay) return false;
     m_entry = 0;
     if (read) {
@@ -76,6 +112,9 @@ bool SimEventMerger::first(bool read)
  
         okay = this->readOneEvent();
     }
+    fill_array->stop();
+    total_time+=fill_array->elapsed();
+    std::cout<<"total_time="<<total_time<<std::endl;
     return okay;
 }
 
@@ -179,7 +218,7 @@ bool SimEventMerger::readOneEvent()
                 nhit->setLocalPhi(hit->getLocalPhi());
             }
 
-            const std::vector<JM::SimPMTHit*>& wp_hits = next_event-> getWPHitsVec();
+           /* const std::vector<JM::SimPMTHit*>& wp_hits = next_event-> getWPHitsVec();
             for ( auto & hit : wp_hits){
                 JM::SimPMTHit* nhit = event->addWPHit();
                 nhit->setPMTID(hit->getPMTID());
@@ -190,7 +229,7 @@ bool SimEventMerger::readOneEvent()
                 nhit->setLocalTheta(hit->getLocalTheta());
                 nhit->setLocalPhi(hit->getLocalPhi());
               }
-
+            */
 
             delete m_cachedEvent;
             m_cachedEvent = 0;

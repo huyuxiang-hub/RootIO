@@ -5,6 +5,8 @@ use DataModelRelease v* DataModel
 use RootIOSvc v* RootIO
 use RootIOUtil v* RootIO
 use EDMUtil v* DataModel
+use JunoTimer v* Utilities
+
 
 library RootIOTools *.cc
 apply_pattern install_more_includes more=RootIOTools
